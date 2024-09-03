@@ -63,6 +63,10 @@ while True:
 		for video in video_files:
 			print(f"Lecture de {video}...")
 			subprocess.run(['cvlc', '--no-video-title-show', video])
+	elif len(video_files) == 1:
+		video = video_files[0]
+		print(f"Lecture de {video}...")
+		subprocess.run(['cvlc', '--no-video-title-show', '--loop', video])
 	else:
-		print("Aucune vidéo disponible. Lecture de default.mp4.")
+		print("Aucune vidéo disponible. Lecture de la vidéo par défaut")
 		subprocess.run(['cvlc', '--loop', '--no-video-title-show', default_video_path])
