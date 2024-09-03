@@ -62,7 +62,7 @@ while True:
 	if video_files:
 		for video in video_files:
 			print(f"Lecture de {video}...")
-			subprocess.run(['cvlc', '--no-video-title-show', video])
+			subprocess.run(['cvlc', '--no-video-title-show', '--play-and-exit', video])
 	elif len(video_files) == 1:
 		video = video_files[0]
 		print(f"Lecture de {video}...")
