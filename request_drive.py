@@ -59,7 +59,7 @@ video_files = [os.path.join(local_folder, f) for f in os.listdir(local_folder) i
 
 # 4. Boucle de lecture
 while True:
-	if video_files && len(video_files) > 1:
+	if video_files and len(video_files) > 1:
 		for video in video_files:
 			print(f"Lecture de {video}...")
 			subprocess.run(['cvlc', '--no-video-title-show', '--play-and-exit', video])
