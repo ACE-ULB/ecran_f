@@ -2,6 +2,23 @@ from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
 import os
 import subprocess
+from dotenv import load_dotenv
+
+# Charger les variables d'environnement depuis le fichier .env
+load_dotenv()
+
+# Identifier le dossier Google Drive en fonction du fichier local
+if os.path.exists(".solbosch"):
+    folder_id = os.getenv("SOLBOSCH_FOLDER_ID")
+    print("Configuration Solbosch détectée.")
+elif os.path.exists(".plaine"):
+    folder_id = os.getenv("PLAINE_FOLDER_ID")
+    print("Configuration Plaine détectée.")
+else:
+    raise FileNotFoundError("Aucun fichier de configuration trouvé. Vérifiez la configuration.")
+
+if not folder_id:
+    raise ValueError("L'ID du dossier Google Drive est manquant dans le fichier .env.")
 
 # Authentification avec Google
 gauth = GoogleAuth()
@@ -30,9 +47,20 @@ if not os.path.exists(local_folder):
 default_video_path = os.path.join(local_folder, "default.mp4")
 default_video = drive.ListFile({'q': f"'{folder_id}' in parents and title='default.mp4' and trashed=false"}).GetList()
 
-if default_video and not os.path.exists(default_video_path):
-	print(f"Téléchargement de default.mp4...")
-	default_video[0].GetContentFile(default_video_path)
+if default_video_list:
+    default_video = default_video_list[0]
+    default_video_id = default_video['id']
+    default_video_modified_date = default_video['modifiedDate']
+    
+    # Vérification de l'existence et de la mise à jour de la vidéo par défaut
+    if os.path.exists(default_video_path):
+        local_modified_time = os.path.getmtime(default_video_path)
+        if local_modified_time < default_video_modified_date:
+            print("Mise à jour de default.mp4 car une version plus récente est disponible...")
+            default_video.GetContentFile(default_video_path)
+    else:
+        print("Téléchargement de default.mp4...")
+        default_video.GetContentFile(default_video_path)
 
 # Lister les fichiers sur Google Drive (excluant "default.mp4")
 drive_files = drive.ListFile({'q': f"'{folder_id}' in parents and title != 'default.mp4' and trashed=false"}).GetList()
