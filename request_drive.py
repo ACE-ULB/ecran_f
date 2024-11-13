@@ -45,7 +45,7 @@ if not os.path.exists(local_folder):
 
 # Télécharger "default.mp4" si non existant dans le dossier local
 default_video_path = os.path.join(local_folder, "default.mp4")
-default_video = drive.ListFile({'q': f"'{folder_id}' in parents and title='default.mp4' and trashed=false"}).GetList()
+default_video_list = drive.ListFile({'q': f"'{folder_id}' in parents and title='default.mp4' and trashed=false"}).GetList()
 
 if default_video_list:
     default_video = default_video_list[0]
